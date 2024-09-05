@@ -55,11 +55,17 @@ const KEY = "4f344a6b";
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
+  const query = "once+upon+a+time";
 
   useEffect(function () {
-    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=once+upon+a+time`).then(
-      (res) => res.json().then((data) => setMovies(data.Search))
-    );
+    async function fetchMovies() {
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+      );
+      const data = await res.json();
+      setMovies(data.Search);
+    }
+    fetchMovies();
   }, []);
 
   return (
