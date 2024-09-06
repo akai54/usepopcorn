@@ -207,15 +207,18 @@ function Movie({ movie, onSelectMovie }) {
 
 function MovieDetails({ selectedId, onCloseMovie }) {
   const [movie, setMovie] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(
     function () {
       async function getMovieDetails() {
+        setIsLoading(true);
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         );
         const data = await res.json();
         setMovie(data);
+        setIsLoading(false);
       }
 
       getMovieDetails();
@@ -225,41 +228,50 @@ function MovieDetails({ selectedId, onCloseMovie }) {
 
   return (
     <div className="details">
-      <header>
-        <button className="btn-back" onClick={onCloseMovie}>
-          &larr;
-        </button>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <header>
+            <button className="btn-back" onClick={onCloseMovie}>
+              &larr;
+            </button>
 
-        <img src={movie.Poster} alt={`Poster of the movie ${movie.Title}`} />
+            <img
+              src={movie.Poster}
+              alt={`Poster of the movie ${movie.Title}`}
+            />
 
-        <div className="details-overview">
-          <h2>{movie.Title}</h2>
-          <p>{movie.Released}</p>
-          <p>{movie.Genre}</p>
-          <p>
-            <span>🌠</span>
-            {movie.imdbRating} IMDb Rating
-          </p>
-        </div>
-      </header>
+            <div className="details-overview">
+              <h2>{movie.Title}</h2>
+              <p>{movie.Released}</p>
+              <p>{movie.Genre}</p>
+              <p>
+                <span>🌠</span>
+                {movie.imdbRating} IMDb Rating
+              </p>
+            </div>
+          </header>
 
-      <section>
-        <div className="rating">
-          <StarRating maxRating={10} size={24} />
-        </div>
+          <section>
+            <div className="rating">
+              <StarRating maxRating={10} size={24} />
+            </div>
 
-        <p>
-          <em>{movie.Plot}</em>
-        </p>
+            <p>
+              <em>{movie.Plot}</em>
+            </p>
 
-        <p>
-          Starring <strong>{movie.Actors}</strong>
-        </p>
+            <p>
+              Starring <strong>{movie.Actors}</strong>
+            </p>
 
-        <p>
-          Directed by <strong>{movie.Director}</strong>
-        </p>
-      </section>
+            <p>
+              Directed by <strong>{movie.Director}</strong>
+            </p>
+          </section>
+        </>
+      )}
     </div>
   );
 }
