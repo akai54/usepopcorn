@@ -142,13 +142,22 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
+  const [inputValue, setInputValue] = useState(query);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setQuery(inputValue);
+    }
+  };
+
   return (
     <input
       className="search"
       type="text"
       placeholder="Search movies..."
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      onKeyDown={handleKeyDown}
     />
   );
 }
