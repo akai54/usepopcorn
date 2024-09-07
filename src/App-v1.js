@@ -240,6 +240,24 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
   useEffect(
     function () {
+      function listener(e) {
+        if (e.key === "Escape") {
+          onCloseMovie();
+        }
+      }
+      // Attach listener on every movie mount
+      document.addEventListener("keydown", listener);
+
+      // Deattach listener when movie changes
+      return () => {
+        document.removeEventListener("keydown", listener);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
