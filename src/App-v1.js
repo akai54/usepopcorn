@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
+import { useKeyListener } from "./useKeyListener";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -101,25 +102,11 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
-  const [inputValue, setInputValue] = useState(query);
-  const inputEl = useRef(null);
-
-  useEffect(() => {
-    function keyListener(e) {
-      if (document.activeElement !== inputEl.current) {
-        if (e.key === "Enter") inputEl.current.focus();
-      }
-      if (e.key === "Enter") setQuery(inputValue);
-    }
-
-    document.addEventListener("keydown", keyListener);
-    console.log("add");
-
-    return () => {
-      document.removeEventListener("keydown", keyListener);
-      console.log("remove");
-    };
-  }, [setQuery, inputValue]);
+  const { inputValue, setInputValue, inputEl } = useKeyListener(
+    query,
+    setQuery,
+    "enter"
+  );
 
   return (
     <input
