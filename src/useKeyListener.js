@@ -6,11 +6,10 @@ export function useKeyListener(query, setQuery, key) {
 
   useEffect(() => {
     function keyListener(e) {
-      if (document.activeElement !== inputEl.current) {
-        if (e.key.toLowerCase() === key.toLowerCase()) inputEl.current.focus();
-      }
       if (e.key.toLowerCase() === key.toLowerCase()) {
-        setQuery(inputValue);
+        if (document.activeElement !== inputEl.current) {
+          inputEl.current.focus();
+        } else setQuery(inputValue);
       }
     }
 
