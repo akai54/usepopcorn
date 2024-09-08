@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -9,13 +10,8 @@ const KEY = "4f344a6b";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  //const [watched, setWatched] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
-  const [watched, setWatched] = useState(() => {
-    const storedWatched = localStorage.getItem("watched");
-    return JSON.parse(storedWatched);
-  });
-
+  const [watched, setWatched] = useLocalStorageState([], "watched");
   const { movies, isLoading, error } = useMovies(query);
 
   function handleSelectMovie(id) {
@@ -36,10 +32,6 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
 
   return (
     <>
