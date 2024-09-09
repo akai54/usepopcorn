@@ -10,6 +10,7 @@
 
 # production
 /build
+/.jampack
 
 # misc
 .DS_Store
